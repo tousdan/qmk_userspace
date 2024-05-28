@@ -1,13 +1,22 @@
-// Copyright 2022 Mark Stosberg (@markstos)
-// SPDX-License-Identifier: GPL-2.0-or-later
 #include QMK_KEYBOARD_H
 
+extern uint8_t is_master;
+
+void keyboard_post_init_user(void) {
+#ifdef RGB_MATRIX_ENABLE
+    rgb_matrix_enable();
+    rgb_matrix_set_speed(RGB_MATRIX_DEFAULT_SPD);
+    //rgb_matrix_mode(RGB_MATRIX_SOLID_REACTIVE);
+    rgb_matrix_sethsv(HSV_PURPLE);
+#endif
+}
+
 enum custom_keycodes {
-  QWERTY = SAFE_RANGE,
-  LOWER,
-  RAISE,
-  FUNC,
-  BACKLIT
+    DEFAULT = SAFE_RANGE,
+    LOWER,
+    RAISE,
+    FUNC,
+    MOUSE,
 };
 
 enum combos {
@@ -18,39 +27,43 @@ enum combos {
 const uint16_t PROGMEM df_combo[] = {KC_D, KC_F, COMBO_END};
 const uint16_t PROGMEM jk_combo[] = {KC_J, KC_K, COMBO_END};
 
+
 combo_t key_combos[COMBO_COUNT] = {
   // Add commonly used dash to home row
   [DF_DASH]    = COMBO(df_combo, KC_MINS),
   // For Vim, put Escape on the home row
   [JK_ESC]    = COMBO(jk_combo, KC_ESC),
+
 };
 
 // Each layer gets a name for readability, which is then used in the keymap matrix below.
 // The underscores don't mean anything - you can have a layer called STUFF or any other name.
 // Layer names don't all need to be of the same length, obviously, and you can also skip them
 // entirely and just use numbers.
-enum custom_layers {
-  _QWERTY,
-  _LOWER,
-  _RAISE,
-  _FUNC,
-};
+#define _QWERTY 0
+#define _LOWER  1
+#define _RAISE  2
+#define _FUNC   3
+#define _MOUSE  4
+#define _SHORTCUT  5
 
 // For _QWERTY layer
 #define GUI_ENT  GUI_T(KC_ENT)
 #define LOW_TAB  LT(_LOWER, KC_TAB)
+#define MOU_GUI  LT(_MOUSE, KC_LGUI)
 #define OSL_FUN  OSL(_FUNC)
 #define OSM_AGR  OSM(MOD_RALT)
-#define OSM_LCTL OSM(MOD_LCTL)
-#define OSM_SFT  OSM(MOD_LSFT) 
+#define OSM_ALT  OSM(MOD_LALT)
+#define OSM_CTL  OSM(MOD_LCTL)
+#define OSM_SFT  OSM(MOD_LSFT)
 #define RSE_BSP  LT(_RAISE, KC_BSPC)
-
 
 // For _RAISE layer
 #define CTL_ESC  LCTL_T(KC_ESC)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-  [_QWERTY] = LAYOUT(
+
+[_QWERTY] = LAYOUT_split_3x6_3( \
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
        KC_TAB,    KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                     KC_Y    ,KC_U    ,KC_I    ,KC_O    ,KC_P    ,KC_DEL  ,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
@@ -58,11 +71,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
  OSM(MOD_LSFT),   KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,                     KC_N    ,KC_M    ,KC_COMM ,KC_DOT  ,KC_SLSH ,OSL_FUN ,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
-                                         OSM_LCTL, GUI_ENT, LOW_TAB,   RSE_BSP ,KC_SPC  ,OSM_SFT
+                                         OSM_CTL, GUI_ENT, LOW_TAB,    RSE_BSP ,KC_SPC  ,OSM_SFT
                                       //`--------------------------'  `--------------------------'
   ),
 
-  [_LOWER] = LAYOUT(
+[_LOWER] = LAYOUT_split_3x6_3( \
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
       _______, KC_EXLM, KC_AT,  KC_HASH, KC_DLR,  KC_PERC,                      KC_CIRC, KC_AMPR, KC_ASTR, KC_LPRN, KC_RPRN, _______ ,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
@@ -72,10 +85,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
                                           KC_TRNS,  KC_TRNS, LOWER,    KC_TRNS, KC_TRNS, KC_COLON
                                       //`--------------------------'  `--------------------------'
-    ),
-
-
-  [_RAISE] = LAYOUT(
+  ),
+  
+[_RAISE] = LAYOUT_split_3x6_3( \
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
       _______, KC_DEL , XXXXXXX, KC_UNDS, KC_PLUS, KC_PGUP,                      XXXXXXX, XXXXXXX, XXXXXXX, KC_BSLS, KC_PIPE,_______ ,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
@@ -87,17 +99,32 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                       //`--------------------------'  `--------------------------'
   ),
 
-  [_FUNC] = LAYOUT(
+[_FUNC] = LAYOUT_split_3x6_3( \
   //,-----------------------------------------------------.                    ,-----------------------------------------------------.
       _______, KC_F1  , KC_F2  , KC_F3   , KC_F4 ,  KC_F5 ,                     KC_F6   , KC_F7  , KC_F8  , KC_F9  , KC_F10 ,_______ ,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
       _______, KC_F11 , KC_F12 , XXXXXXX, XXXXXXX, XXXXXXX,                     XXXXXXX , XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,_______ ,
   //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
-      _______, KC_CAPS, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                     XXXXXXX , XXXXXXX, XXXXXXX, XXXXXXX, QK_BOOT,XXXXXXX ,
+      _______, KC_CAPS, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      RGB_TOG, XXXXXXX, XXXXXXX, XXXXXXX, QK_BOOT,XXXXXXX ,
   //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
                                           XXXXXXX, XXXXXXX, XXXXXXX,    XXXXXXX, FUNC   , XXXXXXX
                                       //`--------------------------'  `--------------------------'
-  )
+                                      //`--------------------------'  `--------------------------'
+  ),
+
+// There's no keybinding to activate the mouse layer yet!
+[_MOUSE] = LAYOUT_split_3x6_3( \
+  //,-----------------------------------------------------.                    ,-----------------------------------------------------.
+      _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                     XXXXXXX, KC_MS_L, KC_MS_U, KC_MS_D, KC_MS_R, _______,\
+  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
+      _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                     XXXXXXX, KC_BTN1, KC_BTN2, XXXXXXX, XXXXXXX, _______,\
+  //|--------+--------+--------+--------+--------+--------|                    |--------+--------+--------+--------+--------+--------|
+      _______, XXXXXXX, XXXXXXX,XXXXXXX, XXXXXXX, XXXXXXX,                      XXXXXXX, KC_APP,  XXXXXXX, XXXXXXX, XXXXXXX, _______,\
+  //|--------+--------+--------+--------+--------+--------+--------|  |--------+--------+--------+--------+--------+--------+--------|
+                                          KC_TRNS, KC_TRNS, KC_TRNS,    KC_TRNS, KC_TRNS, KC_TRNS\
+                                      //`--------------------------'  `--------------------------'
+  ),
+  
 };
 
 uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
@@ -106,7 +133,52 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
             return TAPPING_TERM_THUMB;
       case LT(_LOWER, KC_TAB):
             return TAPPING_TERM_THUMB;
+      case LT(_MOUSE, KC_LGUI):
+            return TAPPING_TERM_THUMB;
+      case LT(_SHORTCUT, OSM_SFT):
+            return TAPPING_TERM_THUMB;
       default:
             return TAPPING_TERM;
     }
 }
+
+#if defined(ENCODER_ENABLE) && defined(ENCODER_MAP_ENABLE)
+const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
+
+};
+#endif // defined(ENCODER_ENABLE) && defined(ENCODER_MAP_ENABLE)
+
+#ifdef OLED_ENABLE
+bool oled_task_user(void) {
+    // Host Keyboard Layer Status
+
+    if (is_keyboard_master()) {
+        switch (get_highest_layer(layer_state)) {
+            case _QWERTY:
+                oled_write_P(PSTR("Default\n"), false);
+                break;
+            case _LOWER:
+                oled_write_P(PSTR("Lower\n"), false);
+                break;
+            case _RAISE:
+                oled_write_P(PSTR("Raise\n"), false);
+                break;
+            case _FUNC:
+                oled_write_P(PSTR("FN\n"), false);
+                break;
+            case _MOUSE:
+                oled_write_P(PSTR("Mouse\n"), false);
+                break;
+            case _SHORTCUT:
+                oled_write_P(PSTR("Shortcuts\n"), false);
+                break;
+            default:
+                // Or use the write_ln shortcut over adding '\n' to the end of your string
+                oled_write_ln_P(PSTR("Undefined"), false);
+        }
+    } else {
+        oled_write_raw(logo, sizeof(logo));
+    }
+    return false;
+}
+#endif

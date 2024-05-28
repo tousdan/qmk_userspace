@@ -1,29 +1,45 @@
-/*
-This is the C configuration file for the keymap
-
-  Copyright 2022 Mark Stosberg (@markstos)
-  SPDX-License-Identifier: GPL-2.0-or-later
-
-*/
-
 #pragma once
 
-//#define USE_MATRIX_I2C
+#define RGB_MATRIX_LED_COUNT 54
+#define RGB_MATRIX_DEFAULT_SPD 127
+#define RGB_MATRIX_TIMEOUT 180000 // 3 minutes // 300000 = 5 minutes
+#define RGB_MATRIX_LED_FLUSH_LIMIT 16
+#define RGB_MATRIX_DEFAULT_SAT 77
+#define RGB_MATRIX_DEFAULT_VAL 86
+#define RGB_MATRIX_SPLIT { 27, 27 }
+#define SPLIT_TRANSPORT_MIRROR
+#define RGB_MATRIX_DEFAULT_MODE RGB_MATRIX_ALPHAS_MODS
+#define ENABLE_RGB_MATRIX_SOLID_REACTIVE
+#define RGB_DISABLE_WHEN_USB_SUSPENDED
+#define RGB_TRIGGER_ON_KEYDOWN
+
+#define RP2040_BOOTLOADER_DOUBLE_TAP_RESET
+
+#define SPLIT_ACTIVITY_ENABLE
+
+
+#define I2C_DRIVER I2CD1
+#define I2C1_SDA_PIN GP22
+#define I2C1_SCL_PIN GP23
+
+#define AUDIO_PIN GP28
+#define AUDIO_PWM_DRIVER PWMD6
+#define AUDIO_INIT_DELAY
+#define AUDIO_PWM_CHANNEL RP2040_PWM_CHANNEL_A
+// markstos prefers silent boot.
+// #define STARTUP_SONG SONG(ODE_TO_JOY)
+//#define AUDIO_CLICKY
+
+#define ANALOG_JOYSTICK_Y_AXIS_PIN GP26
+#define ANALOG_JOYSTICK_X_AXIS_PIN GP27
+#define POINTING_DEVICE_INVERT_Y
+#define POINTING_DEVICE_INVERT_X
 
 /* Select hand configuration */
 
-// #define MASTER_LEFT
+//#define MASTER_LEFT
 #define MASTER_RIGHT
 // #define EE_HANDS
-
-//#define SSD1306OLED
-
-
-// By default, when holding a dual-function key shortly after tapping it, the
-// tapped key will begin repeating. This is handy for fast typists when typing
-// words with double letters, such as "happy". If you turn this setting ON, it
-// will be counted as a held modifier instead.
-//#define TAPPING_FORCE_HOLD
 
 // Customized by markstos
 #define TAPPING_TERM 200
@@ -37,20 +53,14 @@ This is the C configuration file for the keymap
 // enabled, the dual-role key will perform its hold action instead.
 #define HOLD_ON_OTHER_KEY_PRESS
 
-// markstos: not sure if these are correct
-// They are intended to beep and flash during flashing
-#define QMK_LED     D5
-#define QMK_SPEAKER C6
-
-// Prevent normal rollover on alphas from accidentally triggering mods.
-// Removed because it's now default
-//#define IGNORE_MOD_TAP_INTERRUPT
+// markstos: prevent keydown and keyup from firing on different layers
+#define PREVENT_STUCK_MODIFER
 
 // When enabled, typing a mod-tap plus second within term will register as the mod-combo
 // Ref: https://beta.docs.qmk.fm/using-qmk/software-features/tap_hold#permissive-hold 
 #define PERMISSIVE_HOLD
 
-#define COMBO_COUNT 2 
+#define COMBO_COUNT 2
 
 // Set the COMBO_TERM so low that I won't type the keys one after each other during normal typing.
 // They would have be held together intentionally to trigger this.
@@ -60,4 +70,3 @@ This is the C configuration file for the keymap
 // I want a relatively low timeout, so if I accidentally type "Shift", I can pause just briefly and move on.
 #define ONESHOT_TAP_TOGGLE 3  /* Tapping this number of times holds the key until tapped once again. */
 #define ONESHOT_TIMEOUT 2000  /* Time (in ms) before the one shot key is released */
-
