@@ -1,23 +1,12 @@
 /*
 This is the C configuration file for the keymap
 
-  Copyright 2022 Mark Stosberg (@markstos)
+  Copyright 2024 Mark Stosberg (@markstos)
   SPDX-License-Identifier: GPL-2.0-or-later
 
 */
 
 #pragma once
-
-//#define USE_MATRIX_I2C
-
-/* Select hand configuration */
-
-// #define MASTER_LEFT
-#define MASTER_RIGHT
-// #define EE_HANDS
-
-//#define SSD1306OLED
-
 
 // By default, when holding a dual-function key shortly after tapping it, the
 // tapped key will begin repeating. This is handy for fast typists when typing
@@ -31,20 +20,14 @@ This is the C configuration file for the keymap
 // used for Tapping Term on thumb keys
 #define TAPPING_TERM_THUMB 125
 
+// Primary used to tap then hold backspace, which is on a dual-use thumb key.
+#define QUICK_TAP_TERM 125
+
 // If you press a dual-role key, press another key, and then release the
 // dual-role key, all within the tapping term, by default the dual-role key
 // will perform its tap action. If the HOLD_ON_OTHER_KEY_PRESS option is
 // enabled, the dual-role key will perform its hold action instead.
 #define HOLD_ON_OTHER_KEY_PRESS
-
-// markstos: not sure if these are correct
-// They are intended to beep and flash during flashing
-#define QMK_LED     D5
-#define QMK_SPEAKER C6
-
-// Prevent normal rollover on alphas from accidentally triggering mods.
-// Removed because it's now default
-//#define IGNORE_MOD_TAP_INTERRUPT
 
 // When enabled, typing a mod-tap plus second within term will register as the mod-combo
 // Ref: https://beta.docs.qmk.fm/using-qmk/software-features/tap_hold#permissive-hold
@@ -61,4 +44,8 @@ This is the C configuration file for the keymap
 #define ONESHOT_TAP_TOGGLE 3  /* Tapping this number of times holds the key until tapped once again. */
 #define ONESHOT_TIMEOUT 2000  /* Time (in ms) before the one shot key is released */
 
-#define POINTING_DEVICE_COMBINED
+// This value is not literal, but refers to an index in the
+// COCOT_CPI_OPTIONS ARRAY, which as values:
+// 250, 500, 750, 1000, 1250
+// So, it defaults to 250
+#define COCOT_CPI_DEFAULT 0

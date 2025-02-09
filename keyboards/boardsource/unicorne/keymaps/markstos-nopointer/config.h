@@ -17,32 +17,9 @@
 
 #define SPLIT_ACTIVITY_ENABLE
 
-#define SPLIT_POINTING_ENABLE
-#define POINTING_DEVICE_RIGHT
-// #define POINTING_DEVINCE_ROTATION_90
-
-// #define ANALOG_JOYSTICK_Y_AXIS_PIN GP27
-// #define ANALOG_JOYSTICK_X_AXIS_PIN GP28
-
-
-
-// #define I2C_DRIVER I2CD1
-// #define I2C1_SDA_PIN GP22
-// #define I2C1_SCL_PIN GP23
-
-// #define AUDIO_PIN GP28
-// #define AUDIO_PWM_DRIVER PWMD6
-// #define AUDIO_INIT_DELAY
-// #define AUDIO_PWM_CHANNEL RP2040_PWM_CHANNEL_A
-
 // markstos prefers silent boot.
 // #define STARTUP_SONG SONG(ODE_TO_JOY)
 //#define AUDIO_CLICKY
-
-// #define ANALOG_JOYSTICK_Y_AXIS_PIN GP26
-// #define ANALOG_JOYSTICK_X_AXIS_PIN GP27
-// #define POINTING_DEVICE_INVERT_Y
-// #define POINTING_DEVICE_INVERT_X
 
 /* Select hand configuration */
 

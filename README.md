@@ -1,4 +1,33 @@
-# QMK Userspace
+# QMK Userspace for markstos
+
+This repo contains the "markstos" layouts for the Corne (crkbd), cocot46plus and Boardsource Unicorne keyboards.
+
+For more about this layout, see:
+https://mark.stosberg.com/markstos-corne-3x5-1-keyboard-layout/
+
+## To flash markstos layout to a Corne keyboard (v3)
+
+   make crkbd:markstos:dfu
+
+For the first flash, you may need to flash both halves.
+
+## To flash markstos layout to a Boardsource Unicorne keyboard with dual pointing devices.
+
+This expects the right half connects to the computer.
+
+    make boardsource/unicorne:markstos:flash
+ 
+For the first flash, you may need to flash both halves.
+
+## To flash markstos layout to a Boardsource Unicorne keyboard with no pointing devices.
+
+This expects the right half connects to the computer.
+
+    make boardsource/unicorne:markstos-nopointer:flash
+ 
+For the first flash, you may need to flash both halves.
+
+# Leftover docs -- default docs from qmk_userspace template repo follow.
 
 This is a template repository which allows for an external set of QMK keymaps to be defined and compiled. This is useful for users who want to maintain their own keymaps without having to fork the main QMK repository.
 
