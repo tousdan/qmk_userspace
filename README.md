@@ -2,9 +2,11 @@ To compile for the rp2040 microcontroller the following command should be used
 
 `qmk compile -e CONVERT_TO=promicro_rp2040 -kb crkbd/rev1 -km markstos`
 
-This will generate a uf2 file which needs to simply be transferred to the controller once set in flash mode (press reset twice)
+This will generate a uf2 file which needs to simply be transferred to the controller once set in flash mode (press reset twice and the controller will show up as an usb flash drive).
 
+Cable needs to be plugged in the right corne half when flashing
 
+Was last compiled with qmk 1.1.6
 
 
 # QMK Userspace for markstos
