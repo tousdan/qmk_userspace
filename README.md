@@ -1,3 +1,12 @@
+To compile for the rp2040 microcontroller the following command should be used
+
+`qmk compile -e CONVERT_TO=promicro_rp2040 -kb crkbd/rev1 -km markstos`
+
+This will generate a uf2 file which needs to simply be transferred to the controller once set in flash mode (press reset twice)
+
+
+
+
 # QMK Userspace for markstos
 
 This repo contains the "markstos" layouts for the Corne (crkbd), cocot46plus and Boardsource Unicorne keyboards.
